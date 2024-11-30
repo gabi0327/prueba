@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descargar Archivo</title>
+    <style>
+        #preview {
+            width: 150px;
+            height: 150px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Archivo Descargado</h1>
+    
+    <div id="preview"></div>
+    <div id="contenidoArchivo"></div>
+
+    <!-- Botón de descarga -->
+    <button id="descargarBoton" style="display: none;">Descargar Archivo</button>
+    <a href="{% url 'login' %}">Inicio</a>
+
+
+    <script>
+        // Cargar el archivo guardado en localStorage
+        const contenidoArchivo = localStorage.getItem('archivoSeleccionado');
+        if (contenidoArchivo) {
+            document.getElementById('contenidoArchivo').textContent = contenidoArchivo;
+            
+            // Mostrar una imagen representativa del archivo
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(new Blob([contenidoArchivo], {type: 'text/plain'}));
+            document.getElementById('preview').appendChild(img);
+
+            // Mostrar el botón de descarga
+            document.getElementById('descargarBoton').style.display = 'block';
+        }
+
+        // Función para descargar el archivo
+        function descargarArchivo() {
+            const blob = new Blob([contenidoArchivo], {type: 'text/plain'});
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'juegos.json'; // Nombre del archivo descargado
+            link.click();
+        }
+
+        // Evento onclick para el botón de descarga
+        document.getElementById('descargarBoton').onclick = descargarArchivo;
+    </script>
+</body>
+</html>

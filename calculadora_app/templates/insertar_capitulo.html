@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertar Capítulos</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'img/ico.png' %}" type="image/png">
+
+    <style>
+        :root {
+            --bg-color: #f9fafd;
+            --primary-color: #3498db;
+            --secondary-color: #e74c3c;
+            --text-color: #333;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        @keyframes gradient {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 25px;
+            border: 1px solid black;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        form {
+            display: grid;
+            gap: 20px;
+      
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(var(--secondary-color), 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        a {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            justify-content: center;
+            text-align: center;
+            display: flex;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Insertar Capítulos </h1>
+        <form id="capituloForm">
+            <input type="text" id="nombre" placeholder="Nombre del capítulo" required>
+            <input type="number" id="precio" placeholder="Precio del capítulo" min="0" step="0.01" required>            <button type="submit">Guardar</button>
+        </form>
+        <a href="{% url 'inicio' %}">Inicio</a>
+
+        <a href="{% url 'mostrar_capitulo' %}">Mostrar Capítulos </a>
+    </div>
+
+    <script>
+        // Función para cargar capítulos guardados al iniciar la aplicación
+        function cargarCapitulos() {
+            const capitulosGuardados = localStorage.getItem('capitulos');
+            if (capitulosGuardados) {
+                capitulos = JSON.parse(capitulosGuardados);
+            }
+        }
+
+        // Arreglo para almacenar los capítulos
+        let capitulos = [];
+
+        // Función para buscar un capítulo por nombre
+        function buscarCapituloPorNombre(nombre) {
+            return capitulos.find(capitulo => capitulo.nombre === nombre);
+        }
+
+        // Función para guardar un capítulo
+        function guardarCapitulo(capitulo) {
+            const capituloExistente = buscarCapituloPorNombre(capitulo.nombre);
+            
+            if (capituloExistente) {
+                // Mostrar alerta de advertencia
+                if (confirm(`El capítulo ${capitulo.nombre} ya existe.`)) {
+                    mostrarResultado(`Capítulo ${capitulo.nombre} sobrescrita.`);
+                    capitulos[capitulos.findIndex(u => u.nombre === capitulo.nombre)] = capitulo;
+                    localStorage.setItem('capitulos', JSON.stringify(capitulos));
+                } else {
+                    mostrarResultado('Operación cancelada.');
+                }
+            } else {
+                capitulos.push(capitulo);
+                mostrarResultado(`Capítulo ${capitulo.nombre} guardado correctamente.`);
+                
+                // Guardar los capítulos en localStorage
+                localStorage.setItem('capitulos', JSON.stringify(capitulos));
+            }
+        }
+
+        // Event listener para el formulario
+        document.getElementById('capituloForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Obtenemos los valores de los inputs
+            const nombre = document.getElementById('nombre').value;
+            const orden = parseFloat(document.getElementById('precio').value);
+
+            // Creamos un objeto capítulo
+            const capitulo = { nombre, orden };
+
+            // Guardamos el capítulo
+            guardarCapitulo(capitulo);
+
+            // Reiniciamos los campos del formulario
+            document.getElementById('nombre').value = '';
+            document.getElementById('precio').value = '';
+
+            // Mostramos solo el mensaje de éxito
+        });
+
+        // Función para mostrar resultados en la pantalla usando alert()
+        function mostrarResultado(mensaje) {
+            window.alert(mensaje);
+        }
+
+        // Cargar capítulos al iniciar la aplicación
+        cargarCapitulos();
+    </script>
+</body>
+</html>

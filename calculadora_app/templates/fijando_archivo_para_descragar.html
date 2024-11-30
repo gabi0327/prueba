@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirar Archivos</title>
+    <style>
+        #preview {
+            width: 150px;
+            height: 150px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Acceder y Visualizar Archivos</h1>
+    
+    <button id="accederArchivos">Acceder a archivos</button>
+    <input type="file" id="inputArchivo" style="display:none;" accept=".txt,.json">
+    
+    <div id="preview"></div>
+    <div id="contenidoArchivo"></div>
+
+    <button id="enviarArchivo">Enviar archivo</button>
+    <a href="{% url 'inicio' %}">Inicio</a>
+
+
+    <script>
+        document.getElementById('accederArchivos').addEventListener('click', function() {
+            document.getElementById('inputArchivo').click();
+        });
+
+        document.getElementById('inputArchivo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const contenido = event.target.result;
+                    document.getElementById('contenidoArchivo').textContent = contenido;
+                };
+                reader.readAsText(file);
+                
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                document.getElementById('preview').appendChild(img);
+            }
+        });
+
+        document.getElementById('enviarArchivo').addEventListener('click', function() {
+            const file = document.getElementById('inputArchivo').files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const contenido = event.target.result;
+                    
+                    document.getElementById('contenidoArchivo').textContent = contenido;
+                    
+                    // Guardar el contenido en localStorage
+                    localStorage.setItem('archivoSeleccionado', contenido);
+                };
+                reader.readAsText(file);
+                
+                // Mostrar una imagen representativa del archivo
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                document.getElementById('preview').appendChild(img);
+            }
+        });
+    </script>
+</body>
+</html>
