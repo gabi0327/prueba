@@ -20,8 +20,11 @@
 
     <!-- Botón de descarga -->
     <button id="descargarBoton" style="display: none;">Descargar Archivo</button>
-    <a href="{% url 'login' %}">Inicio</a>
 
+    <!-- Nuevo botón Fijra -->
+    <button id="fijraBoton">Fijra</button>
+
+    <a href="{% url 'login' %}">Inicio</a>
 
     <script>
         // Cargar el archivo guardado en localStorage
@@ -50,6 +53,36 @@
 
         // Evento onclick para el botón de descarga
         document.getElementById('descargarBoton').onclick = descargarArchivo;
+
+        // Función para convertir JSON a HTML y mostrarlo
+        function convertirJSONaHTML() {
+            try {
+                // Parsear el JSON
+                let objetoJSON = JSON.parse(contenidoArchivo);
+
+                // Convertir el objeto JSON a una cadena HTML
+                let htmlString = '<pre style="white-space: pre-wrap; word-wrap: break-word;">' + 
+                    JSON.stringify(objetoJSON, null, 2) + '</pre>';
+
+                // Mostrar el HTML en un elemento div
+                document.getElementById('contenidoArchivo').innerHTML = htmlString;
+                
+                // Ocultar el botón de descarga y mostrar el botón Fijra
+                document.getElementById('descargarBoton').style.display = 'none';
+                document.getElementById('fijraBoton').style.display = 'block';
+
+                // Mostrar una imagen representativa del archivo convertido
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(new Blob([htmlString], {type: 'text/html'}));
+                document.getElementById('preview').appendChild(img);
+            } catch (error) {
+                console.error('Error al convertir JSON:', error);
+                alert('No se pudo convertir el archivo JSON.');
+            }
+        }
+
+        // Evento onclick para el botón Fijra
+        document.getElementById('fijraBoton').onclick = convertirJSONaHTML;
     </script>
 </body>
 </html>

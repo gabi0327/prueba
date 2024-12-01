@@ -103,18 +103,17 @@
             }
         }
 
-        .boton-copiar {
-            margin-top: 20px;
+        a {
+            text-decoration: none;
+            justify-content: center;
             text-align: center;
-        }
-
-        #btnCopiar {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
+            display: flex;
+            color: rgb(255, 255, 255);
+            background-color: blue;
+            margin-top: 5px;
+            padding: 10px;
+            font-size: 20px;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -172,29 +171,8 @@
             }
         }
 
-        // Función para copiar los datos a otro HTML
-        function copiarDatos() {
-            const juegosString = JSON.stringify(juegos);
-            
-            // Crear un elemento div temporal
-            const tempDiv = document.createElement('div');
-            tempDiv.style.position = 'absolute';
-            tempDiv.style.left = '-9999px';
-            tempDiv.textContent = juegosString;
-
-            // Copiar el contenido del div
-            document.body.appendChild(tempDiv);
-            document.execCommand('copy');
-            document.body.removeChild(tempDiv);
-
-            // Mostrar mensaje de éxito
-            alert('Datos copiados con éxito');
-        }
-
-        // Agregar eventos a los botones de eliminar y copiar
+        // Ejecutar la función cuando el documento esté listo
         document.addEventListener('DOMContentLoaded', mostrarJuegos);
-        document.querySelectorAll('.eliminar-btn').forEach(btn => btn.addEventListener('click', () => eliminarJuego({ nombre: btn.closest('tr').querySelector('td:first-child').textContent })));
-        document.getElementById('btnCopiar').addEventListener('click', copiarDatos);
     </script>
 </body>
 </html>

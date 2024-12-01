@@ -18,6 +18,9 @@ urlpatterns = [
     path('calculadora/', views.calculadora, name='calculadora'),
     path('calculadora_para_invitados/', views.calculadora_para_invitados, name='calculadora_para_invitados'),
     path('salva_juego/', views.salva_juego, name='salva_juego'),
+    path('fijando_archivo_para_descragar/', views.fijando_archivo_para_descragar, name='fijando_archivo_para_descragar'),
+    path('descargar_archivo/', views.descargar_archivo, name='descargar_archivo'),
+    path('salva_juego_usuarios/', views.salva_juego_usuarios, name='salva_juego_usuarios'),
 
 
 
