@@ -2,138 +2,18 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salva y Extraer Juegos</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-        .botones {
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0px;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-    </style>
+    <title>Mostrar datos de juegos</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Salva y Extraer Juegos</h1>
-        <div class="botones">
-            <button onclick="guardarJuegosEnArchivo()">Salvar Juegos</button>
-            <button onclick="extraerYGuardarJuegosDeArchivo()">Extraer y Guardar Juegos</button>
-            <a href="{% url 'inicio' %}">Inicio</a>
-
-        </div>
-    </div>
+    <h1>Datos de Juegos Copiados</h1>
+    <p id="datosCopiados"></p>
 
     <script>
-        // Variable global para almacenar los juegos
-        let juegos = [];
+        // Obtener los datos copiados desde localStorage
+        const datosCopiados = JSON.parse(localStorage.getItem('juegos') || '{}');
 
-        // Función para guardar juegos en archivo JSON
-        async function guardarJuegosEnArchivo() {
-            try {
-                const juegosString = JSON.stringify(juegos);
-                const blob = new Blob([juegosString], {type: 'application/json'});
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'juegos.json';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                console.log('Juegos guardados exitosamente');
-            } catch (error) {
-                console.error('Error al guardar los juegos:', error);
-                alert('Hubo un error al intentar guardar los juegos. Por favor, inténtelo de nuevo.');
-            }
-        }
-
-        // Función para extraer y guardar juegos desde un archivo JSON
-        async function extraerYGuardarJuegosDeArchivo() {
-            try {
-                // Intentar abrir el archivo
-                const fileInput = document.createElement('input');
-                fileInput.type = 'file';
-                fileInput.accept = '.json';
-                fileInput.style.display = 'none';
-                document.body.appendChild(fileInput);
-                fileInput.click();
-
-                // Esperar hasta que el archivo esté seleccionado
-                await new Promise(resolve => {
-                    fileInput.onchange = () => resolve();
-                });
-
-                // Leer el archivo
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = async () => {
-                    const jsonString = reader.result;
-                    const parsedJson = JSON.parse(jsonString);
-
-                    // Limpiar el arreglo existente
-                    juegos = [];
-
-                    // Agregar los juegos extraídos al arreglo
-                    parsedJson.forEach(juego => {
-                        juegos.push({
-                            nombre: juego.nombre,
-                            precio: juego.precio
-                        });
-                    });
-
-                    // Mostrar mensaje de éxito
-                    alert('Juegos extraídos y agregados al arreglo exitosamente.');
-
-                    // Guardar los juegos en localStorage
-                    localStorage.setItem('juegos', JSON.stringify(juegos));
-
-                    // Mostrar los juegos extraídos
-                    mostrarJuegosExtraídos();
-                };
-                reader.readAsText(file);
-            } catch (error) {
-                console.error('Error al extraer y guardar los juegos:', error);
-                alert('Hubo un error al intentar extraer y guardar los juegos. Por favor, inténtelo de nuevo.');
-            }
-        }
-
-        // Función para mostrar los juegos extraídos
-        function mostrarJuegosExtraídos() {
-            const juegosElementos = document.createElement('ul');
-            juegos.forEach(juego => {
-                const li = document.createElement('li');
-                li.textContent = `${juego.nombre}: $${juego.precio}`;
-                juegosElementos.appendChild(li);
-            });
-            document.body.appendChild(juegosElementos);
-        }
-
-        // Cargar juegos al iniciar la aplicación
-        function cargarJuegos() {
-            const juegosGuardados = localStorage.getItem('juegos');
-            if (juegosGuardados) {
-                juegos = JSON.parse(juegosGuardados);
-            }
-        }
-
-        // Event listener para cargar juegos al hacer clic en el botón
-        document.addEventListener('DOMContentLoaded', cargarJuegos);
+        // Mostrar los datos copiados
+        document.getElementById('datosCopiados').textContent = JSON.stringify(datosCopiados, null, 2);
     </script>
 </body>
 </html>

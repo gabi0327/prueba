@@ -4,20 +4,6 @@ from django.shortcuts import render
 
 
 
-def salva_juego_usuarios(request):
-    return render(request,'salva_juego_usuarios.html')
-
-
-
-def descargar_archivo(request):
-    return render(request,'descargar_archivo.html')
-
-
-
-def fijando_archivo_para_descragar(request):
-    return render(request,'fijando_archivo_para_descragar.html')
-
-
 def salva_juego(request):
     return render(request,'salva_juego.html')
 
